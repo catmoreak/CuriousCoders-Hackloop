@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalmRhythm - Guided Breathing Exercise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1, #ec4899);
+            --bg-gradient: linear-gradient(135deg, #eef2ff, #fce7f3);
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --text-primary: #1f2937;
+            --text-secondary: #4b5563;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        #instructions, #breathing-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            max-width: 400px;
+            animation: slideIn 0.5s ease-in-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        #breathing-container {
+            display: none;
+        }
+
+        #circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #6366f1; /* Using primary gradient color */
+            margin-bottom: 20px;
+            animation: breathe 8s infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% {
+                transform: scale(1);
+                background-color: #6366f1; /* Inhale color */
+            }
+            50% {
+                transform: scale(1.6);
+                background-color: #ec4899; /* Exhale color */
+            }
+        }
+
+        #breathing-text {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 10px 0;
+            color: var(--text-secondary);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        #countdown {
+            font-size: 18px;
+            color: var(--text-primary);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        #eye-closure {
+            font-size: 18px;
+            margin: 15px 0;
+            color: var(--text-secondary);
+            opacity: 0; /* Initially hidden */
+            animation: fadeIn 2s ease-in-out forwards; /* Fade in after button click */
+        }
+
+        /* Button Styling */
+        button {
+            padding: 10px 20px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 8px;
+            background-color: #6366f1;
+            color: #ffffff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            animation: bounce 1s infinite;
+        }
+
+        button:hover {
+            background-color: #4f46e5;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="instructions">
+        <h1>CalmRhythm - Breathing Exercise</h1>
+        <p>This guided breathing exercise helps you relax and manage stress. Follow the circle to regulate your breathing, focusing on each inhale and exhale.</p>
+        <button onclick="startBreathingExercise()">Begin Exercise</button>
+    </div>
+
+    <!-- Breathing Exercise Container -->
+    <div id="breathing-container">
+        <div id="circle"></div>
+        <h1 id="breathing-text">Breathe In</h1>
+        <p id="countdown">4 seconds</p>
+        <p id="eye-closure">Close your eyes and follow the sound...</p>
+        <button onclick="stopBreathingExercise()">End Exercise</button>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="breatheInAudio" src="breathe_in.mp3" preload="auto"></audio>
+    <audio id="breatheOutAudio" src="breathe_out.mp3" preload="auto"></audio>
+
+    <script>
+        let breathingInterval;
+        let countdownTime = 4;
+
+        function startBreathingExercise() {
+            document.getElementById("instructions").style.display = "none";
+            document.getElementById("breathing-container").style.display = "flex";
+            document.getElementById("eye-closure").style.opacity = 1;
+
+            const breathingText = document.getElementById("breathing-text");
+            const countdown = document.getElementById("countdown");
+            const breatheInAudio = document.getElementById("breatheInAudio");
+            const breatheOutAudio = document.getElementById("breatheOutAudio");
+
+            let isBreathingIn = true;
+            breathingText.innerText = "Breathe In";
+            countdown.innerText = `${countdownTime} seconds`;
+            breatheInAudio.play();
+
+            breathingInterval = setInterval(() => {
+                countdownTime--;
+                countdown.innerText = `${countdownTime} seconds`;
+
+                if (countdownTime === 0) {
+                    isBreathingIn = !isBreathingIn;
+                    breathingText.innerText = isBreathingIn ? "Breathe In" : "Breathe Out";
+                    countdownTime = 4;
+                    isBreathingIn ? breatheInAudio.play() : breatheOutAudio.play();
+                }
+            }, 1000); // Runs every second to update the countdown and breathing state
+        }
+
+        function stopBreathingExercise() {
+            document.getElementById("breathing-container").style.display = "none";
+            document.getElementById("instructions").style.display = "flex";
+            clearInterval(breathingInterval);
+            countdownTime = 4; // Reset countdown
+        }
+    </script>
+
+</body>
+</html>

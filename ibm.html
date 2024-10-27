@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Journal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1, #ec4899);
+            --bg-gradient: linear-gradient(135deg, #eef2ff, #fce7f3);
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --text-primary: #1f2937;
+            --text-secondary: #4b5563;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--text-primary);
+            text-align: center;
+            font-size: 26px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-top: 15px;
+            padding: 15px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            resize: none;
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        button {
+            display: inline-block;
+            width: 30%;
+            background: var(--primary-gradient);
+            color: white;
+            padding: 12px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        button:hover {
+            transform: scale(1.03);
+        }
+
+        .entry {
+            margin-top: 15px;
+            padding: 15px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .entry strong {
+            display: block;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .results {
+            margin-top: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mood Journal</h1>
+        <textarea id="entry" placeholder="Write about your mood..."></textarea>
+        <div style="display: flex; justify-content: space-between;">
+            <button onclick="saveEntry()">Save Entry</button>
+            <button onclick="analyzeMood()">Analyze Mood</button>
+            <button onclick="resetJournal()">Reset Journal</button>
+        </div>
+        <div id="entriesContainer"></div>
+        <div class="results" id="results"></div>
+    </div>
+
+    <script>
+        let journalEntries = JSON.parse(localStorage.getItem("journalEntries")) || [];
+
+        displayEntries();
+
+        function saveEntry() {
+            const entryText = document.getElementById("entry").value;
+            if (entryText) {
+                const entry = { 
+                    text: entryText, 
+                    date: new Date().toISOString() 
+                };
+                journalEntries.push(entry);
+                localStorage.setItem("journalEntries", JSON.stringify(journalEntries));
+                document.getElementById("entry").value = "";
+                displayEntries();
+            }
+        }
+
+        function displayEntries() {
+            const entriesContainer = document.getElementById("entriesContainer");
+            entriesContainer.innerHTML = "";
+            journalEntries.forEach((entry) => {
+                const entryDiv = document.createElement("div");
+                entryDiv.classList.add("entry");
+                
+                const entryDate = new Date(entry.date).toLocaleDateString();
+                const entryTime = new Date(entry.date).toLocaleTimeString();
+                
+                entryDiv.innerHTML = `<strong>${entryDate} ${entryTime}</strong>: ${entry.text}`;
+                entriesContainer.appendChild(entryDiv);
+            });
+        }
+
+        async function analyzeMood() {
+            const entryTexts = journalEntries.map((entry) => entry.text).join(". ");
+            
+            if (!entryTexts) {
+                alert("Please write at least one journal entry before analyzing mood.");
+                return;
+            }
+
+            const apiKey = "T1Gt0aKmG_Mudw7OjUlHiPaRTyqZQA86Sj-838qh8XaM"; // Replace with your actual API Key
+            const apiUrl = "https://api.au-syd.natural-language-understanding.watson.cloud.ibm.com/instances/28e80c41-2d07-4c66-8a2a-cfa1fdcff321"; // Replace with your actual instance URL
+            const auth = btoa("apikey:" + apiKey);
+
+            try {
+                const response = await fetch(`${apiUrl}/v1/analyze?version=2021-08-01`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Basic ${auth}`
+                    },
+                    body: JSON.stringify({
+                        text: entryTexts,
+                        features: {
+                            sentiment: {},
+                            emotion: {}
+                        }
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error("Error details:", errorData);
+                    throw new Error(`Failed to analyze mood: ${errorData.error || 'Unknown error'}`);
+                }
+
+                const result = await response.json();
+                displayResults(result);
+            } catch (error) {
+                console.error("Error analyzing mood:", error);
+                document.getElementById("results").innerHTML = `<p>${error.message}</p>`;
+            }
+        }
+
+        function displayResults(data) {
+            const sentiment = data.sentiment.document.label;
+            const emotions = data.emotion.document.emotion;
+
+            document.getElementById("results").innerHTML = `
+                <p><strong>Sentiment:</strong> ${capitalize(sentiment)}</p>
+                <p><strong>Emotions:</strong></p>
+                <ul>
+                    ${Object.entries(emotions)
+                        .map(([emotion, score]) => `<li>${capitalize(emotion)}: ${(score * 100).toFixed(1)}%</li>`)
+                        .join("")}
+                </ul>
+            `;
+        }
+
+        function resetJournal() {
+            journalEntries = [];
+            localStorage.removeItem("journalEntries");
+            displayEntries();
+            document.getElementById("results").innerHTML = "";
+        }
+
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+    </script>
+</body>
+</html>
