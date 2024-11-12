@@ -256,8 +256,8 @@ input[type="radio"]:checked + .option-label {
   }
 }
 .feature-card a {
-    text-decoration: none; /* Remove underline */
-    color: inherit; /* Ensure the text color matches the rest of the text */
+    text-decoration: none;
+    color: inherit; 
 }
 
 .feature-card a:hover {

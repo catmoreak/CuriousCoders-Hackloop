@@ -21,6 +21,28 @@ export const questions = [
       ]
     },
     {
+      text: "How are you feeling right now?",
+      subtext: "Immediate Mood Assessment",
+      options: [
+        { value: 1, label: "Very unhappy" },
+        { value: 2, label: "Unhappy" },
+        { value: 3, label: "Neutral" },
+        { value: 4, label: "Happy" },
+        { value: 5, label: "Very happy" }
+      ]
+    },
+    {
+      text: "How calm or relaxed are you feeling at this moment?",
+      subtext: "Immediate Calmness Assessment",
+      options: [
+        { value: 1, label: "Not at all" },
+        { value: 2, label: "Slightly" },
+        { value: 3, label: "Moderately" },
+        { value: 4, label: "Quite a bit" },
+        { value: 5, label: "Completely" }
+      ]
+    },
+    {
       text: "How often have you felt tired or lacked energy to get things done over the past week?",
       subtext: "Based on PHQ-9",
       options: [

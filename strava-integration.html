@@ -46,8 +46,8 @@
                         dataTypeName: 'com.google.heart_rate.bpm',
                         dataSourceId: 'derived:com.google.heart_rate.bpm:com.google.android.gms:merge_heart_rate_bpm'
                     }],
-                    bucketByTime: { durationMillis: 86400000 }, // Daily buckets
-                    startTimeMillis: Date.now() - 86400000, // Last 24 hours
+                    bucketByTime: { durationMillis: 86400000 }, 
+                    startTimeMillis: Date.now() - 86400000, 
                     endTimeMillis: Date.now(),
                 })
             });

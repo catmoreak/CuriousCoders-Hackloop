@@ -4,32 +4,43 @@ import { renderQuestion } from './ui.js';
 let currentQuestionIndex = 0;
 const answers = [];
 
-// Offline music recommendations
+
 const musicRecommendations = {
     depressed: [
-        { name: 'Sad Song', path: 'music1.mp3' },
-        { name: 'Melancholy Tune', path: 'pmusic1.mp3' },
-        { name: 'Heavy Heart', path: 'music1.mp3' }
+        { name: 'Canon in', path: 'musics/Depression/canon.mp3' },
+        { name: 'Edvard', path: 'musics/Depression/edvard.mp3' },
+        { name: 'Lagaan', path: 'musics/Depression/lagaan.mp3' },
+        { name: 'Ludovicho', path: 'musics/Depression/ludo.mp3' }
+
+        
     ],
     sad: [
-        { name: 'Slow Ballad', path: 'music1.mp3' },
-        { name: 'Contemplative Piece', path: 'music1.mp3' },
-        { name: 'Gentle Melody', path: 'music1.mp3' }
+        { name: 'Sky', path: 'musics/Sad/sky.mp3' },
+        { name: 'Clock', path: 'musics/Sad/clocks.mp3' },
+        { name: 'Hauser', path: 'musics/Sad/hauser.mp3' },
+        { name: 'Tuj me rabh dikhta hey', path: 'musics/Sad/tujeme.mp3' }
     ],
     neutral: [
-        { name: 'Ambient Sounds', path: 'music1.mp3' },
-        { name: 'Chill Instrumental', path: 'music1.mp3' },
-        { name: 'Smooth Jazz', path: 'music1.mp3' }
+        { name: 'Audio1', path: 'musics/Nuetral/audio1.mpeg' },
+        { name: 'Audio2', path: 'musics/Nuetral/audio2.mpeg' },
+        { name: 'Audio3', path: 'musics/Nuetral/audio3.mpeg' },
+        { name: 'Audio4', path: 'musics/Nuetral/audio4.mpeg' },
+        { name: 'Audio5', path: 'musics/Nuetral/audio5.mpeg' }
+
     ],
     stressed: [
-        { name: 'Relaxing Nature', path: 'music1.mp3' },
-        { name: 'Calm Ocean Waves', path: 'music1.mp3' },
-        { name: 'Meditation Track', path: 'music1.mp3' }
+        { name: 'Ek Ladki Ko Dekha Toh Ais', path: 'musics/Stress/ekladki.mp3' },
+        { name: 'Enya', path: 'musics/Stress/enya.mp3' },
+        { name: 'Jashn', path: 'musics/Stress/jashn.mp3' },
+        { name: 'Marconi', path: 'musics/Stress/marconi.mp3' },
+        { name: 'Yiruma', path: 'musics/Stress/yiruma.mp3' }
     ],
     happy: [
-        { name: 'Uplifting Anthem', path: 'music1.mp3' },
-        { name: 'Joyful Tune', path: 'music1.mp3' },
-        { name: 'Happy Vibes', path: 'music1.mp3' }
+        { name: 'Balam', path: 'musics/Happy/balam.mp3' },
+        { name: 'Elgar', path: 'musics/Happy/elgar.mp3' },
+        { name: 'Queen', path: 'musics/Happy/queen.mp3' },
+        { name: 'Scott', path: 'musics/Happy/scott.mp3' },
+        { name: 'Coldplay', path: 'musics/Happy/coldplay.mp3' }
     ]
 };
 
@@ -79,16 +90,21 @@ function updateProgress(percentage) {
 }
 
 function calculateMood(answers) {
-    // Calculate scores for each scale
-    const phq9Score = answers.slice(0, 3).reduce((acc, val) => acc + (val || 0), 0);
-    const gad7Score = answers.slice(3, 5).reduce((acc, val) => acc + (val || 0), 0);
-    const pssScore = answers.slice(5, 8).reduce((acc, val) => acc + (val || 0), 0);
+    const sadScore = answers[0];
+    const anxiousScore = answers[1];
+    const immediateMoodScore = answers[2];
+    const calmnessScore = answers[3];
+    const energyScore = answers[4];
+    const sleepQualityScore = answers[5];
+    const irritabilityScore = answers[6];
+    const interestScore = answers[7];
+    const stressScore = answers[8];
+    const isolationScore = answers[9];
 
-    // Determine mood based on scores
-    if (phq9Score >= 10) return 'depressed';
-    if (gad7Score >= 8) return 'stressed';
-    if (phq9Score >= 5 && gad7Score >= 5) return 'sad';
-    if (pssScore <= 4) return 'happy';
+    if (sadScore >= 4 && energyScore <= 2 && interestScore <= 2) return 'depressed';
+    if (anxiousScore >= 3 && calmnessScore <= 2 && stressScore >= 4) return 'stressed';
+    if (sadScore >= 3 && irritabilityScore >= 3) return 'sad';
+    if (immediateMoodScore >= 4 && calmnessScore >= 4) return 'happy';
     return 'neutral';
 }
 
@@ -102,9 +118,9 @@ function showResults(mood) {
                 <h2>Assessment Complete</h2>
                 <br>
                 <p>Your mood: ${mood.charAt(0).toUpperCase() + mood.slice(1)}</p>
-                <br>
-                <p>Here the music track to boost your mood</p>
-                <br>
+                <br>   <br>
+                <p>Here is a music track to boost your mood</p>
+                <br>   <br>
                 <button class="primary-button" id="playButton">Play Music</button>
                 <button class="primary-button" id="pauseButton">Pause Music</button>
                 <button class="primary-button" id="nextButton">Next Track</button>
@@ -150,5 +166,5 @@ function playRecommendedMusic(recommendedMusic) {
     }
 }
 
-// Start the application
+
 initializeApp();

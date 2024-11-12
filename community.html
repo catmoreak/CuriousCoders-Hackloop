@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Melody Medic Community Forum</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4482502945124740" crossorigin="anonymous"></script>
+    <script type="module">
+        // Import necessary Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        import { getDatabase, ref, set, push, onValue, remove, onDisconnect } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+    
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDhdt1754bCHhAdJIDwBIIxPhQM0srKvh0",
+            authDomain: "melody-medic-874ff.firebaseapp.com",
+            projectId: "melody-medic-874ff",
+            storageBucket: "melody-medic-874ff.firebasestorage.app",
+            messagingSenderId: "571956029273",
+            appId: "1:571956029273:web:7d383f8cf65ef1d6694e48",
+            measurementId: "G-CPH81VZ0T6"
+        };
+    
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+    
+        let currentUserId = null;
+        let currentUserName = '';
+    
+        // Listen for authentication state changes
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                currentUserId = user.uid;
+                currentUserName = user.displayName || 'Anonymous User';
+                updateUserStatus(true);
+                updateUserProfile(user);
+                loadMessages();
+            } else {
+                updateUserStatus(false);
+                currentUserId = null;
+                currentUserName = '';
+                resetUserProfile();
+            }
+        });
+    
+        // Update user status (online/offline)
+        function updateUserStatus(isOnline) {
+            const userRef = ref(database, `users/${currentUserId}`);
+            if (isOnline) {
+                set(userRef, { online: true }).then(() => {
+                    updateOnlineUserCount();
+                    const joinMessage = `${currentUserName} has joined the chat.`;
+                    push(ref(database, 'messages'), { text: joinMessage, sender: 'System' });
+                });
+                onDisconnect(userRef).remove();
+            } else {
+                remove(userRef);
+            }
+        }
+    
+        // Update user profile details
+        function updateUserProfile(user) {
+            const profilePicture = user.photoURL || 'https://via.placeholder.com/50';
+            const displayName = user.displayName || 'Anonymous User';
+    
+            document.getElementById('userAvatar').src = profilePicture;
+            document.querySelector('.user-profile h3').innerText = displayName;
+            document.getElementById("loginContainer").style.display = "none";
+            document.getElementById("chat").style.display = "block";
+        }
+    
+        // Reset user profile when logged out
+        function resetUserProfile() {
+            document.getElementById('userAvatar').src = 'https://via.placeholder.com/50';
+            document.querySelector('.user-profile h3').innerText = 'Welcome, User!';
+        }
+    
+        // Update the number of online users
+        function updateOnlineUserCount() {
+            const usersRef = ref(database, 'users');
+            onValue(usersRef, (snapshot) => {
+                const usersData = snapshot.val();
+                const onlineUsers = usersData ? Object.keys(usersData).length : 0;
+                document.getElementById('userCount').innerText = `Online Users: ${onlineUsers}`;
+            });
+        }
+    
+        // Sign in with Google
+        document.getElementById("googleSignIn").addEventListener("click", signInWithGoogle);
+        document.getElementById("googleSignOut").addEventListener("click", signOutUser);
+    
+        function signInWithGoogle() {
+            const provider = new GoogleAuthProvider();
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    updateUserProfile(result.user);
+                })
+                .catch((error) => {
+                    console.error("Error during sign-in:", error);
+                });
+        }
+    
+        // Sign out user
+        function signOutUser() {
+            signOut(auth).then(() => {
+                resetUserProfile();
+                document.getElementById("chat").style.display = "none";
+                document.getElementById("loginContainer").style.display = "flex";
+            }).catch((error) => {
+                console.error("Error during sign-out:", error);
+            });
+        }
+    
+        // Load messages from database
+        function loadMessages() {
+            const messagesRef = ref(database, 'messages');
+            onValue(messagesRef, (data) => {
+                document.getElementById("messages").innerHTML = "";
+                data.forEach((child) => {
+                    const message = child.val();
+                    displayMessage(message);
+                });
+            });
+        }
+    
+        // Display a message
+        function displayMessage(message) {
+            const messageDiv = document.createElement("div");
+            messageDiv.classList.add("message");
+            if (message.sender === 'System') {
+                messageDiv.classList.add("system-message");
+            }
+            messageDiv.innerHTML = `<strong>${message.sender}</strong>: ${message.text}`;
+            messageDiv.classList.add("fade-in");
+            document.getElementById("messages").appendChild(messageDiv);
+        }
+    
+        // Send a message
+        document.getElementById("sendMessage").addEventListener("click", () => {
+            const messageInput = document.getElementById("messageInput");
+            const messageText = messageInput.value;
+    
+            if (messageText) {
+                const messagesRef = ref(database, 'messages');
+                push(messagesRef, { text: messageText, sender: currentUserName });
+                messageInput.value = "";
+            }
+        });
+    </script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+
+        header {
+            background-color: #ecafec;
+            color: rgb(29, 1, 1);
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            animation: fade-in 0.5s; /* Header fade-in animation */
+        }
+
+
+        .container {
+            width: 80%;
+            margin: auto;
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            flex: 1;
+        }
+
+
+        .login-button {
+            padding: 10px 20px;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+
+        .login-button:hover {
+            background-color: #357ae8;
+        }
+
+
+        #chat {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            flex: 3;
+            display: none; /* Initially hidden */
+            flex-direction: column;
+        }
+
+
+        #messages {
+            flex: 1;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        .message {
+            padding: 5px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+
+
+        .system-message {
+            background-color: #e3f2fd; /* Light blue for system messages */
+            color: #0d47a1; /* Dark blue for better visibility */
+            font-weight: bold; /* Make system messages bold */
+        }
+
+
+        .user-message {
+            background-color: #e8f5e9; /* Light green for user messages */
+            color: #1b5e20; /* Dark green for better visibility */
+        }
+
+
+        #messageInput {
+            padding: 10px;
+            width: 100%;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+
+        #sendMessage {
+            padding: 10px 15px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+
+        #sendMessage:hover {
+            background-color: #388e3c;
+        }
+
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+
+        .user-profile img {
+            border-radius: 50%;
+            margin-right: 10px;
+            width: 50px; /* Ensure consistent size */
+            height: 50px; /* Ensure consistent size */
+        }
+
+
+        #userCount {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        #googleSignOut {
+    padding: 10px 20px;
+    background-color: #4285f4; /* Blue background */
+    color: white; /* White text */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+#googleSignOut:hover {
+    background-color: #357ae8; /* Darker blue when hovered */
+}
+
+
+
+        /* New class for fade-in effect on messages */
+        .fade-in {
+            animation: fade-in 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>Welcome to the Melody Medic</h2>
+        <h4>Community forum</h4>
+    </header>
+
+    <div class="container">
+        <div id="loginContainer" class="login-container">
+            <h5>Sign in with Google to join the community</h5>
+            <button id="googleSignIn" class="login-button">Sign in</button>
+        </div>
+
+        <div id="chat" class="chat">
+            <div class="user-profile">
+                <img id="userAvatar" src="https://via.placeholder.com/50" alt="User Avatar">
+                <div>
+                    <h3>Welcome, User!</h3>
+                    <p id="userCount">Online Users: 0</p>
+                </div>
+                <button id="googleSignOut">Sign out</button>
+            </div>
+            <div id="messages"></div>
+            <input type="text" id="messageInput" placeholder="Type a message...">
+            <button id="sendMessage">Send</button>
+        </div>
+    </div>
+</body>
+</html>
