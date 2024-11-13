@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meet Our Team</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1, #ec4899);
+            --bg-gradient: linear-gradient(135deg, #eef2ff, #fce7f3);
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --text-primary: #1f2937;
+            --text-secondary: #4b5563;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .team-container {
+            max-width: 800px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .intro-text {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+        }
+
+        .team-members {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .member-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            max-width: 180px;
+            width: 100%;
+        }
+
+        .member-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .image-container {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 15px;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            color: var(--primary-gradient);
+        }
+
+        .quote {
+            font-style: italic;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            color: var(--text-secondary);
+        }
+
+        .linkedin-link {
+            text-decoration: none;
+            color: var(--primary-gradient);
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .linkedin-link:hover {
+            color: #0d47a1;
+        }
+
+        .small_icon {
+            width: 24px; /* Set the width of the icon */
+            height: 24px; /* Set the height of the icon */
+            object-fit: contain; /* Ensure the icon maintains its aspect ratio */
+        }
+
+        @media (max-width: 800px) {
+            .team-members {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="team-container">
+        <h2>Meet the Minds Behind  Melody-medic </h2>
+        <br>
+        <p class="intro-text">Get to know us more and connect with us on LinkedIn!</p>
+
+        <div class="team-members">
+            <div class="member-card">
+                <div class="image-container">
+                    <img src="Images/ujwal.jpg" alt="Ujwal Hegde">
+                </div>
+                <h3>Ujwal Hegde</h3>
+                <p class="quote">"Striving to create harmony in the world, one line of code at a time"</p>
+                <a href="https://www.linkedin.com/in/ujwal-hegde-0b0aa8293?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BVKpmkKWwTtShNXb4IePztw%3D%3D" class="linkedin-link" target="_blank"><img class="small_icon" src="Images/linked_in_logo.png" ></a>
+            </div>
+
+            <div class="member-card">
+                <div class="image-container">
+                    <img src="Images/sujnan.jpg" alt="Sujnan D Devadiga">
+                </div>
+                <h3>Sujnan D Devadiga</h3>
+                <p class="quote">"Think maintaining a relationship is hard? Try resolving merge conflicts in Git!"</p>
+                <a href="https://www.linkedin.com/in/sujnanddevadiga/" class="linkedin-link" target="_blank"><img class="small_icon" src="Images/linked_in_logo.png" ></a>
+            </div>
+
+            <div class="member-card">
+                <div class="image-container">
+                    <img src="Images/chaithanya.jpg" alt="Chaithanya Kamath">
+                </div>
+                <h3>Chaithanya Kamath</h3>
+                <p class="quote">"Coding dreams into reality, with a touch of creativity"</p>
+                <a href="https://www.linkedin.com/in/chaithanya-kamath-86b304285?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BS1IJLiXgTZGb7%2BiEFceKzw%3D%3D" class="linkedin-link" target="_blank"><img class="small_icon" src="Images/linked_in_logo.png" ></a>
+            </div>
+
+            <div class="member-card">
+                <div class="image-container">
+                    <img src="Images/swaroop.jpg" alt="Swaroop Sathish Y">
+                </div>
+                <h3>Swaroop Sathish Y</h3>
+                <p class="quote">"Always classy, never too serious, and just the right amount of mischief."</p>
+                <a href="https://www.linkedin.com/in/swaroop-sathishy-b043a9290?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BUicUdsIPTUSFsJYbnGRVOQ%3D%3D" class="linkedin-link" target="_blank"><img class="small_icon" src="Images/linked_in_logo.png" ></a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -164,8 +164,8 @@ button:hover {
     </div>
 
     <!-- Audio Elements -->
-    <audio id="breatheInAudio" src="breathe_in.mp3" preload="auto"></audio>
-    <audio id="breatheOutAudio" src="breathe_out.mp3" preload="auto"></audio>
+    <audio id="breatheInAudio" src="musics/breathin.mp3" preload="auto"></audio>
+    <audio id="breatheOutAudio" src="musics/breathout.mp3" preload="auto"></audio>
     <audio id="backgroundMusic" src="musics/mediation.mp3" preload="auto" loop></audio> 
 
     <script>
@@ -183,7 +183,7 @@ button:hover {
             const breatheOutAudio = document.getElementById("breatheOutAudio");
             const backgroundMusic = document.getElementById("backgroundMusic");
 
-            backgroundMusic.volume = 0.3; 
+            backgroundMusic.volume = 0.6; 
             backgroundMusic.play(); 
 
             let isBreathingIn = true;
