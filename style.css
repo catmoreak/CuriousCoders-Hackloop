@@ -261,6 +261,6 @@ input[type="radio"]:checked + .option-label {
 }
 
 .feature-card a:hover {
-    text-decoration: underline; /* Optional: Add underline on hover for better user experience */
+    text-decoration: underline; 
 }
 

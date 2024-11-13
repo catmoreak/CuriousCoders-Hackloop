@@ -20,7 +20,7 @@ const musicRecommendations = {
         { name: 'Hauser', path: 'musics/Sad/hauser.mp3' },
         { name: 'Tuj me rabh dikhta hey', path: 'musics/Sad/tujeme.mp3' }
     ],
-    neutral: [
+    calm: [
         { name: 'Audio1', path: 'musics/Nuetral/audio1.mpeg' },
         { name: 'Audio2', path: 'musics/Nuetral/audio2.mpeg' },
         { name: 'Audio3', path: 'musics/Nuetral/audio3.mpeg' },
@@ -105,7 +105,7 @@ function calculateMood(answers) {
     if (anxiousScore >= 3 && calmnessScore <= 2 && stressScore >= 4) return 'stressed';
     if (sadScore >= 3 && irritabilityScore >= 3) return 'sad';
     if (immediateMoodScore >= 4 && calmnessScore >= 4) return 'happy';
-    return 'neutral';
+    return 'calm';
 }
 
 function showResults(mood) {

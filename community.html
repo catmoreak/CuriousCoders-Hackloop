@@ -6,12 +6,12 @@
     <title>Melody Medic Community Forum</title>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4482502945124740" crossorigin="anonymous"></script>
     <script type="module">
-        // Import necessary Firebase SDKs
+        
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
         import { getDatabase, ref, set, push, onValue, remove, onDisconnect } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
     
-        // Your Firebase configuration
+       
         const firebaseConfig = {
             apiKey: "AIzaSyDhdt1754bCHhAdJIDwBIIxPhQM0srKvh0",
             authDomain: "melody-medic-874ff.firebaseapp.com",
@@ -22,7 +22,7 @@
             measurementId: "G-CPH81VZ0T6"
         };
     
-        // Initialize Firebase
+        
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const database = getDatabase(app);
@@ -30,7 +30,7 @@
         let currentUserId = null;
         let currentUserName = '';
     
-        // Listen for authentication state changes
+        
         onAuthStateChanged(auth, user => {
             if (user) {
                 currentUserId = user.uid;
@@ -46,7 +46,7 @@
             }
         });
     
-        // Update user status (online/offline)
+       
         function updateUserStatus(isOnline) {
             const userRef = ref(database, `users/${currentUserId}`);
             if (isOnline) {
@@ -61,7 +61,7 @@
             }
         }
     
-        // Update user profile details
+        
         function updateUserProfile(user) {
             const profilePicture = user.photoURL || 'https://via.placeholder.com/50';
             const displayName = user.displayName || 'Anonymous User';
@@ -72,13 +72,12 @@
             document.getElementById("chat").style.display = "block";
         }
     
-        // Reset user profile when logged out
+        
         function resetUserProfile() {
             document.getElementById('userAvatar').src = 'https://via.placeholder.com/50';
             document.querySelector('.user-profile h3').innerText = 'Welcome, User!';
         }
     
-        // Update the number of online users
         function updateOnlineUserCount() {
             const usersRef = ref(database, 'users');
             onValue(usersRef, (snapshot) => {
@@ -88,7 +87,7 @@
             });
         }
     
-        // Sign in with Google
+        
         document.getElementById("googleSignIn").addEventListener("click", signInWithGoogle);
         document.getElementById("googleSignOut").addEventListener("click", signOutUser);
     
@@ -103,7 +102,7 @@
                 });
         }
     
-        // Sign out user
+        
         function signOutUser() {
             signOut(auth).then(() => {
                 resetUserProfile();
@@ -114,7 +113,7 @@
             });
         }
     
-        // Load messages from database
+        
         function loadMessages() {
             const messagesRef = ref(database, 'messages');
             onValue(messagesRef, (data) => {
@@ -126,7 +125,7 @@
             });
         }
     
-        // Display a message
+       
         function displayMessage(message) {
             const messageDiv = document.createElement("div");
             messageDiv.classList.add("message");
@@ -138,7 +137,7 @@
             document.getElementById("messages").appendChild(messageDiv);
         }
     
-        // Send a message
+       
         document.getElementById("sendMessage").addEventListener("click", () => {
             const messageInput = document.getElementById("messageInput");
             const messageText = messageInput.value;
