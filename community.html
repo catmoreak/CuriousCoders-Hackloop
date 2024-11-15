@@ -149,182 +149,162 @@
             }
         });
     </script>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #ffffff;
+     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1, #ec4899);
+            --bg-gradient: linear-gradient(135deg, #eef2ff, #fce7f3);
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --text-primary: #1f2937;
+            --text-secondary: #4b5563;
+        }
+
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            height: 100vh;
+            align-items: center;
         }
-
 
         header {
-            background-color: #ecafec;
-            color: rgb(29, 1, 1);
-            padding: 15px;
+            width: 100%;
+            background: var(--primary-gradient);
+            color: white;
             text-align: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            animation: fade-in 0.5s; /* Header fade-in animation */
+            padding: 1.5rem 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
+        header h2 {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        header h4 {
+            font-weight: 500;
+            opacity: 0.9;
+        }
 
         .container {
-            width: 80%;
-            margin: auto;
-            flex: 1;
-            display: flex;
-            justify-content: space-between;
-            padding: 20px;
+            max-width: 800px;
+            width: 100%;
+            margin: 2rem auto 0;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 2rem;
         }
-
 
         .login-container {
             display: flex;
-            justify-content: center;
-            align-items: center;
             flex-direction: column;
-            flex: 1;
+            align-items: center;
+            justify-content: center;
         }
-
 
         .login-button {
             padding: 10px 20px;
-            background-color: #4285f4;
+            background: var(--primary-gradient);
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
+            font-size: 1rem;
+            transition: background-color 0.3s ease, transform 0.2s;
         }
-
 
         .login-button:hover {
-            background-color: #357ae8;
+            transform: translateY(-2px);
         }
 
-
         #chat {
-            background-color: white;
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            flex: 3;
-            display: none; /* Initially hidden */
+            display: none;
             flex-direction: column;
         }
 
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .user-profile img {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+        }
 
         #messages {
             flex: 1;
             max-height: 400px;
             overflow-y: auto;
             margin-bottom: 10px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-            display: flex;
-            flex-direction: column;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background-color: #fff;
         }
-
 
         .message {
-            padding: 5px;
-            margin: 5px 0;
-            border-radius: 5px;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            border-radius: 8px;
         }
-
 
         .system-message {
-            background-color: #e3f2fd; /* Light blue for system messages */
-            color: #0d47a1; /* Dark blue for better visibility */
-            font-weight: bold; /* Make system messages bold */
+            background-color: #dbeafe;
+            color: #1e3a8a;
         }
-
-
-        .user-message {
-            background-color: #e8f5e9; /* Light green for user messages */
-            color: #1b5e20; /* Dark green for better visibility */
-        }
-
 
         #messageInput {
-            padding: 10px;
-            width: 100%;
-            margin-right: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            padding: 0.8rem;
+            width: calc(100% - 120px);
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-right: 1rem;
         }
-
 
         #sendMessage {
-            padding: 10px 15px;
-            background-color: #4caf50;
+            padding: 0.8rem 1.2rem;
+            background: #4caf50;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
         }
-
 
         #sendMessage:hover {
             background-color: #388e3c;
         }
 
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
+        #googleSignOut {
+            padding: 10px 20px;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
         }
 
-
-        .user-profile img {
-            border-radius: 50%;
-            margin-right: 10px;
-            width: 50px; /* Ensure consistent size */
-            height: 50px; /* Ensure consistent size */
+        #googleSignOut:hover {
+            transform: translateY(-2px);
         }
-
 
         #userCount {
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-
-        @keyframes fade-in {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-        #googleSignOut {
-    padding: 10px 20px;
-    background-color: #4285f4; /* Blue background */
-    color: white; /* White text */
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
-
-#googleSignOut:hover {
-    background-color: #357ae8; /* Darker blue when hovered */
-}
-
-
-
-        /* New class for fade-in effect on messages */
-        .fade-in {
-            animation: fade-in 0.5s;
+            font-weight: 600;
+            color: var(--text-secondary);
         }
     </style>
 </head>
@@ -336,8 +316,10 @@
 
     <div class="container">
         <div id="loginContainer" class="login-container">
-            <h5>Sign in with Google to join the community</h5>
-            <button id="googleSignIn" class="login-button">Sign in</button>
+            <br>
+            <h4>Sign in with Google to join the community</h4>
+            <br>    <br>
+            <button id="googleSignIn" class="login-button">Sign in</button> <br> <br>
         </div>
 
         <div id="chat" class="chat">
